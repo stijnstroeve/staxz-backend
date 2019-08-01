@@ -65,3 +65,6 @@ package-lock.json
 
 # Built folder
 build/
+
+#Idea
+.idea/
