@@ -1,0 +1,28 @@
+{
+  "name": "staxz-backend",
+  "version": "0.0.1",
+  "description": "Staxz backend.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "tsc": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stijnstroeve/staxz-backend.git"
+  },
+  "keywords": [
+    "staxz",
+    "backend"
+  ],
+  "author": "Stijn Stroeve",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/stijnstroeve/staxz-backend/issues"
+  },
+  "homepage": "https://github.com/stijnstroeve/staxz-backend#readme",
+  "dependencies": {
+    "@types/express": "^4.17.0",
+    "express": "^4.17.1"
+  }
+}

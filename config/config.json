@@ -1,0 +1,13 @@
+{
+  "STAGE": "development",
+  "PORT": 8001,
+  "ROUTER_PREFIX": "/api",
+  "DATABASE": {
+    "MONGODB_CONNECTION_URI": "mongodb://127.0.0.1:27017/stijn-stroeve"
+  },
+  "PASSWORD": {
+    "SALT_ROUNDS": 10
+  },
+  "ACCESS_TOKEN_EXPIRE_TIME": "1d",
+  "REFRESH_TOKEN_EXPIRE_TIME": "30d"
+}
