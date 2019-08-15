@@ -4,10 +4,10 @@ import {ModuleMethod} from "../Requests/ModuleMethod";
 
 export class UserModule extends Module {
     name: string = "UserModule";
-    moduleRequests: ModuleMethod[] = [];
+    moduleMethods: ModuleMethod[] = [];
 
-    registerModuleRequests(): void {
-        this.moduleRequests.push(new RegisterNewUser());
+    registerModuleMethods(): void {
+        this.moduleMethods.push(new RegisterNewUser());
     }
 
 }

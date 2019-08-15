@@ -3,8 +3,8 @@ import {ModuleMethod} from "../Requests/ModuleMethod";
 
 export class FallbackModule extends Module {
     name: string = "FallbackModule";
-    moduleRequests: ModuleMethod[] = [];
+    moduleMethods: ModuleMethod[] = [];
 
-    registerModuleRequests(): void {}
+    registerModuleMethods(): void {}
 
 }

@@ -7,10 +7,10 @@ export class Error {
     error: any;
     variables?: {name: string, variable: string}[];
 
-    constructor(type: ErrorType, error: any, variables?: {name: string, variable: string}[]) {
+    constructor(type: ErrorType, error?: any, variables?: {name: string, variable: string}[]) {
         this.reference = randomReference(24, 1);
         this.type = type;
-        this.error = error;
+        this.error = error ? error : type.description;
         this.variables = variables;
     }
 
@@ -27,7 +27,7 @@ export class Error {
     }
 
     json() {
-        let object = {key: this.type.key, refCode: this.type.code, description: this.parseDescription(), reference: this.reference};
+        let object = {key: this.type.key, refCode: this.type.code, reference: this.reference, description: this.parseDescription()};
 
         ActionLogger.logError(this);
 

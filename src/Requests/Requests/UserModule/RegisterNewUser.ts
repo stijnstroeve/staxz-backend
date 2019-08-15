@@ -5,17 +5,23 @@ import {RequestType} from "../../RequestType";
 // import User from "../../../database/models/UserModule/User";
 // import {Request, Response} from "express";
 import {ModuleRequest} from "../../ModuleRequest";
+import {ErrorType} from "../../../Error/ErrorType";
+import {Error} from "../../../Error/Error";
 
 export class RegisterNewUser extends ModuleMethod {
 
     request: string = "registerNewUser";
-    requestType: RequestType = RequestType.POST;
+    requestType: RequestType = RequestType.GET;
     // requiredParameters: string[] = ["firstname", "lastname", "username", "email", "password", "phone_number"];
+    requiredParameters: string[] = ["test"];
     needsAuth: boolean = false;
 
     async handle(request: ModuleRequest) {
 
-        request.respond("Success");
+        request.respond({test: request.parameters.test});
+
+        // request.respond()
+        // request.error(new Error(ErrorType.USER_ALREADY_EXISTS, "Error"));
 
         // let user = new User({
         //     firstName: req.body.firstName,
