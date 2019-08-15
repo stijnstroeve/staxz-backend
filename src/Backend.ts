@@ -1,6 +1,7 @@
 import express = require("express");
 import {LogType} from "./Logger/LogType";
 import Logger from "./Logger/Logger";
+import {Module} from "./Modules/Module";
 
 class Backend {
     port: number;
@@ -16,6 +17,8 @@ class Backend {
         this.application.listen(this.port, () => {
             Logger.logType(LogType.INFO, "Started backend listener on port " + this.port + ".")
         });
+
+        Module.registerModules();
     }
 
 }
