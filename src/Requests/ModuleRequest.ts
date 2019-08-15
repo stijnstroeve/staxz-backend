@@ -2,6 +2,7 @@ import {Request, Response} from "express";
 import {ModuleMethod} from "./ModuleMethod";
 import {DefaultResponse} from "./DefaultResponse";
 import {Error} from "../Error/Error";
+import {ActionLogger} from "../Logger/ActionLogger";
 
 export class ModuleRequest {
     private readonly _request: Request;
@@ -16,10 +17,14 @@ export class ModuleRequest {
     }
 
     respond(data: any) {
+        ActionLogger.logRequest(this);
+
         this._response.send(new DefaultResponse(this, true, data).json());
     }
 
-    error(error: Error, status: number) {
+    error(error: Error, status?: number) {
+        ActionLogger.logRequest(this);
+
         if(status) {
             this._response.status(status).send(new DefaultResponse(this, false, null, error).json());
         } else {
@@ -29,10 +34,6 @@ export class ModuleRequest {
 
     get request(): Request {
         return this._request;
-    }
-
-    get response(): Response {
-        return this._response;
     }
 
     get method(): ModuleMethod {

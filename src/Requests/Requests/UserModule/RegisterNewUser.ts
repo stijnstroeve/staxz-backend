@@ -11,17 +11,17 @@ import {Error} from "../../../Error/Error";
 export class RegisterNewUser extends ModuleMethod {
 
     request: string = "registerNewUser";
-    requestType: RequestType = RequestType.GET;
+    requestType: RequestType = RequestType.POST;
     // requiredParameters: string[] = ["firstname", "lastname", "username", "email", "password", "phone_number"];
     requiredParameters: string[] = ["test"];
     needsAuth: boolean = false;
 
     async handle(request: ModuleRequest) {
 
-        request.respond({test: request.parameters.test});
+        // request.respond({test: request.parameters.test});
 
         // request.respond()
-        // request.error(new Error(ErrorType.USER_ALREADY_EXISTS, "Error"));
+        request.error(new Error(ErrorType.USER_ALREADY_EXISTS, "Error"));
 
         // let user = new User({
         //     firstName: req.body.firstName,

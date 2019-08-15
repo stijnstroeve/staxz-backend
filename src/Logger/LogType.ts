@@ -1,4 +1,3 @@
-
 import {Color} from "./Color";
 
 export enum LogType {
