@@ -1,9 +1,11 @@
 import express = require("express");
+import * as bodyParser from "body-parser";
+import config from "../config/config.json";
 import {LogType} from "./Logger/LogType";
 import Logger from "./Logger/Logger";
 import {ModuleHandler} from "./Modules/ModuleHandler";
 import {Router} from "./Routers/Router";
-import bodyParser = require("body-parser");
+import Mongo from "./Database/Mongo";
 
 class Backend {
     port: number;
@@ -16,6 +18,8 @@ class Backend {
 
     start() {
         this.register();
+
+        Mongo.connect();
 
         //Start listening on the given port
         this.application.listen(this.port, () => {
@@ -37,7 +41,7 @@ class Backend {
     registerMiddleware() {
         this.application.use(bodyParser.urlencoded({extended: false}));
         this.application.use(bodyParser.json());
-        this.application.use("/api", Router.router);
+        this.application.use(config.ROUTER_PREFIX, Router.router);
     }
 
 }

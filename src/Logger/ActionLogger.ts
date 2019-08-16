@@ -8,4 +8,7 @@ export class ActionLogger {
     static logRequest(request: ModuleRequest) {
         // console.log(request);
     }
+    static logAction(actionName: string, actionData: any) {
+
+    }
 }

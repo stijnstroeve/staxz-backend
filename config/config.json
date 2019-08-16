@@ -3,7 +3,8 @@
   "PORT": 8001,
   "ROUTER_PREFIX": "/api",
   "DATABASE": {
-    "MONGODB_CONNECTION_URI": "mongodb://127.0.0.1:27017/stijn-stroeve"
+    "MONGODB_CONNECTION_URI": "mongodb://127.0.0.1:27017/stijn-stroeve",
+    "RETRY_ROUNDS": 10
   },
   "PASSWORD": {
     "SALT_ROUNDS": 10
