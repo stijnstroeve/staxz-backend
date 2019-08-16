@@ -1,4 +1,5 @@
 import express = require("express");
+import bearerTokens = require("express-bearer-token");
 import * as bodyParser from "body-parser";
 import config from "../config/config.json";
 import {LogType} from "./Logger/LogType";
@@ -41,6 +42,7 @@ class Backend {
     registerMiddleware() {
         this.application.use(bodyParser.urlencoded({extended: false}));
         this.application.use(bodyParser.json());
+        this.application.use(bearerTokens());
         this.application.use(config.ROUTER_PREFIX, Router.router);
     }
 

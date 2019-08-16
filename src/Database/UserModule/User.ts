@@ -55,55 +55,60 @@ UserSchema.methods.generateTokens = async function() { //This isn"t an arrow fun
 };
 
 UserSchema.statics.refreshToken = async function(refreshToken: string): Promise<any> {
-    let decodedRefreshToken: any;
+    return new Promise<any>((resolve, reject) => {
+        let decodedRefreshToken: any;
 
-    try {
-        decodedRefreshToken = jwt.verify(refreshToken, pconfig.PRIVATE_REFRESH_TOKEN_KEY);
-        const exp = decodedRefreshToken.exp;
-        if(!exp) {
-            return mongoose.Promise.reject(new Error(ErrorType.NO_EXP_DATE_TOKEN));
+        try {
+            decodedRefreshToken = jwt.verify(refreshToken, pconfig.PRIVATE_REFRESH_TOKEN_KEY);
+            const exp = decodedRefreshToken.exp;
+            if(!exp) {
+                return reject(new Error(ErrorType.NO_EXP_DATE_TOKEN));
+            }
+        } catch (error) {
+            if(error.name === "TokenExpiredError") {
+                console.log("Refresh token expired " + refreshToken);
+                return reject(new Error(ErrorType.TOKEN_EXPIRED, error));
+            }
+            return reject(new Error(ErrorType.INVALID_TOKEN_SIGNATURE, error));
         }
-    } catch (error) {
-        if(error.name === "TokenExpiredError") {
-            console.log("Refresh token expired " + refreshToken);
-            return mongoose.Promise.reject(new Error(ErrorType.TOKEN_EXPIRED, error));
-        }
-        return mongoose.Promise.reject(new Error(ErrorType.INVALID_TOKEN_SIGNATURE, error));
-    }
 
-    let accessToken: string = jwt.sign({_id: decodedRefreshToken._id.toString()}, pconfig.PRIVATE_ACCESS_TOKEN_KEY, {
-        expiresIn: config.ACCESS_TOKEN_EXPIRE_TIME,
-        algorithm: "HS256"
-    });
+        let accessToken: string = jwt.sign({_id: decodedRefreshToken._id.toString()}, pconfig.PRIVATE_ACCESS_TOKEN_KEY, {
+            expiresIn: config.ACCESS_TOKEN_EXPIRE_TIME,
+            algorithm: "HS256"
+        });
 
-    User.updateOne({"_id": decodedRefreshToken._id, "tokens.refresh": refreshToken}, {"$set": {"tokens.$.access": accessToken}}, (error: any) => {
-        if(error) return mongoose.Promise.reject(new Error(ErrorType.UNKNOWN, error));
-    });
+        User.updateOne({"_id": decodedRefreshToken._id, "tokens.refresh": refreshToken}, {"$set": {"tokens.$.access": accessToken}}, (error: any) => {
+            if(error) return reject(new Error(ErrorType.UNKNOWN, error));
+        });
 
-    return mongoose.Promise.resolve(accessToken);
+        resolve(accessToken);
+    })
+
 };
 
 UserSchema.statics.findByToken = function(accessToken: string): Promise<any> {
-    let decodedAccessToken: any;
+    return new Promise<any>((resolve, reject) => {
+        let decodedAccessToken: any;
 
-    try {
-        decodedAccessToken = jwt.verify(accessToken, pconfig.PRIVATE_ACCESS_TOKEN_KEY);
-        const exp = decodedAccessToken.exp;
-        if(!exp) {
-            return mongoose.Promise.reject(new Error(ErrorType.NO_EXP_DATE_TOKEN));
+        try {
+            decodedAccessToken = jwt.verify(accessToken, pconfig.PRIVATE_ACCESS_TOKEN_KEY);
+            const exp = decodedAccessToken.exp;
+            if(!exp) {
+                return reject(new Error(ErrorType.NO_EXP_DATE_TOKEN));
+            }
+        } catch (error) {
+            if(error.name === "TokenExpiredError") {
+                console.log("Token expired " + accessToken);
+                return reject(new Error(ErrorType.TOKEN_EXPIRED, error));
+            }
+            return reject(new Error(ErrorType.INVALID_TOKEN_SIGNATURE, error));
         }
-    } catch (error) {
-        if(error.name === "TokenExpiredError") {
-            console.log("Token expired " + accessToken);
-            return mongoose.Promise.reject(new Error(ErrorType.TOKEN_EXPIRED, error));
-        }
-        return mongoose.Promise.reject(new Error(ErrorType.INVALID_TOKEN_SIGNATURE, error));
-    }
 
-    let user = User.findOne({"_id": decodedAccessToken._id, "tokens.access": accessToken}, (error: any) => {
-        if(error) return mongoose.Promise.reject(new Error(ErrorType.UNKNOWN, error));
-    });
-    return mongoose.Promise.resolve(user);
+        let user = User.findOne({"_id": decodedAccessToken._id, "tokens.access": accessToken}, (error: any) => {
+            if(error) return reject(new Error(ErrorType.UNKNOWN, error));
+        });
+        resolve(user);
+    })
 };
 
 const User = Mongo.mongoose.model<IUser, IUserFunctions>("User", UserSchema);
