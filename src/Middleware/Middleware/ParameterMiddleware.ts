@@ -12,15 +12,22 @@ export class ParameterMiddleware extends Middleware {
     handle(module: Module, method: ModuleMethod): RequestHandlerParams {
         return (req: Request, res: Response, next: Function) => {
             let goNext = true;
+            let missing = method.requiredParameters;
             if(!method.requiredParameters) {next(); return}
             method.requiredParameters.forEach((parameter: string) => {
                 let toCheck = method.requestType == RequestType.GET ? req.query[parameter] : req.body[parameter];
-                if(toCheck == null) { goNext = false; }
+
+                if(toCheck == null) {
+                    goNext = false;
+                } else {
+                    let index: number = missing.indexOf(parameter);
+                    missing.splice(index, 1);
+                }
             });
 
             let request: ModuleRequest = req.moduleRequest;
             if(!goNext) {
-                request.error(new Error(ErrorType.NOT_ENOUGH_PARAMETERS), 417);
+                request.error(new Error(ErrorType.NOT_ENOUGH_PARAMETERS, undefined, undefined, {name: "missing", extra: missing}), 417);
                 return;
             }
 

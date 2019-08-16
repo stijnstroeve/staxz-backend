@@ -7,40 +7,35 @@ import {RequestType} from "../../RequestType";
 import {ModuleRequest} from "../../ModuleRequest";
 import {ErrorType} from "../../../Error/ErrorType";
 import {Error} from "../../../Error/Error";
+import User from "../../../Database/UserModule/User";
 
 export class RegisterNewUser extends ModuleMethod {
 
     request: string = "registerNewUser";
     requestType: RequestType = RequestType.POST;
-    // requiredParameters: string[] = ["firstname", "lastname", "username", "email", "password", "phone_number"];
-    requiredParameters: string[] = ["test"];
+    requiredParameters: string[] = ["firstname", "lastname", "username", "email", "password", "phone_number"];
     needsAuth: boolean = false;
 
     async handle(request: ModuleRequest) {
+        let user = new User({
+            firstname: request.parameters.firstname,
+            lastname: request.parameters.lastname,
+            username: request.parameters.username,
+            email: request.parameters.email,
+            password: request.parameters.password,
+            phone_number: request.parameters.phone_number,
+            tokens: []
+        });
 
-        // request.respond({test: request.parameters.test});
-
-        // request.respond()
-        request.error(new Error(ErrorType.USER_ALREADY_EXISTS, "Error"));
-
-        // let user = new User({
-        //     firstName: req.body.firstName,
-        //     lastName: req.body.lastName,
-        //     userName: req.body.userName,
-        //     email: req.body.email,
-        //     password: req.body.password,
-        //     tokens: []
-        // });
-        //
-        // user.save((error: any) => {
-        //     if(error) {
-        //         if(error.code === 11000 || error.code === 11001) {
-        //             res.send(new DefaultResponse(req, false, null, ErrorType.USER_ALREADY_EXISTS.withRef(1)).json()); console.log(error); return;
-        //         }
-        //         res.send(new DefaultResponse(req, false, null, ErrorType.UNKNOWN.withRef(5)).json()); console.log(error); return;
-        //     }
-        //     res.send(new DefaultResponse(req, true).json());
-        // });
+        user.save((error: any) => {
+            if(error) {
+                if(error.code === 11000 || error.code === 11001) {
+                    request.error(new Error(ErrorType.USER_ALREADY_EXISTS, error)); return;
+                }
+                request.error(new Error(ErrorType.UNKNOWN, error)); return;
+            }
+            request.respond(null);
+        });
     }
 
 }

@@ -6,12 +6,14 @@ export class Error {
     type: ErrorType;
     error: any;
     variables?: {name: string, variable: string}[];
+    extra?: {name: string, extra: any};
 
-    constructor(type: ErrorType, error?: any, variables?: {name: string, variable: string}[]) {
+    constructor(type: ErrorType, error?: any, variables?: {name: string, variable: string}[], extra?: {name: string, extra: any}) {
         this.reference = randomReference(24, 1);
         this.type = type;
         this.error = error ? error : type.description;
         this.variables = variables;
+        this.extra = extra;
     }
 
     parseDescription() {
@@ -28,6 +30,10 @@ export class Error {
 
     json() {
         let object = {key: this.type.key, refCode: this.type.code, reference: this.reference, description: this.parseDescription()};
+
+        if(this.extra) {
+            Object.assign(object, {[this.extra.name]: this.extra.extra});
+        }
 
         ActionLogger.logError(this);
 
