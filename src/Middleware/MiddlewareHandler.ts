@@ -4,13 +4,14 @@ import compose = require("compose-middleware");
 import {ParameterMiddleware} from "./Middleware/ParameterMiddleware";
 import {ModuleMethod} from "../Requests/ModuleMethod";
 import {ModuleRequestMiddleware} from "./Middleware/ModuleRequestMiddleware";
+import {LogMiddleware} from "./Middleware/LogMiddleware";
 
 export class MiddlewareHandler {
     static middleware(method: ModuleMethod, module: Module): RequestHandlerParams {
 
         let middlewareList = [
             new ModuleRequestMiddleware(),
-            // new LogMiddleware(),
+            new LogMiddleware(),
             new ParameterMiddleware(),
             // new AuthorizationMiddleware()
         ];

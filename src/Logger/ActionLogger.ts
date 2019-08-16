@@ -6,6 +6,6 @@ export class ActionLogger {
         console.log(error);
     }
     static logRequest(request: ModuleRequest) {
-        console.log(request);
+        // console.log(request);
     }
 }
