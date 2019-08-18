@@ -9,6 +9,7 @@ import {Router} from "./Routers/Router";
 import Mongo from "./Database/Mongo";
 
 class Backend {
+    static instance: Backend;
     port: number;
     application: express.Application;
 
@@ -21,11 +22,13 @@ class Backend {
         this.register();
 
         Mongo.connect();
+    }
 
+    startListener() {
         //Start listening on the given port
         this.application.listen(this.port, () => {
             Logger.logType(LogType.INFO, "Started backend listener on port " + this.port + ".")
-        });
+        })
     }
 
     register() {
@@ -45,7 +48,12 @@ class Backend {
         this.application.use(bearerTokens());
         this.application.use(config.ROUTER_PREFIX, Router.router);
     }
-
+    static createInstance(port: number) {
+        this.instance = new Backend(port);
+    }
+    static getInstance() {
+        return this.instance;
+    }
 }
 
 export default Backend;

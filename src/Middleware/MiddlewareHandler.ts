@@ -5,6 +5,7 @@ import {ParameterMiddleware} from "./Middleware/ParameterMiddleware";
 import {ModuleMethod} from "../Requests/ModuleMethod";
 import {ModuleRequestMiddleware} from "./Middleware/ModuleRequestMiddleware";
 import {LogMiddleware} from "./Middleware/LogMiddleware";
+import {AuthorizationMiddleware} from "./Middleware/AuthorizationMiddleware";
 
 export class MiddlewareHandler {
     static middleware(method: ModuleMethod, module: Module): RequestHandlerParams {
@@ -13,7 +14,7 @@ export class MiddlewareHandler {
             new ModuleRequestMiddleware(),
             new LogMiddleware(),
             new ParameterMiddleware(),
-            // new AuthorizationMiddleware()
+            new AuthorizationMiddleware()
         ];
 
         //Create a list of middleware to add to the request

@@ -1,7 +1,7 @@
 import Backend from "./src/Backend";
 
-let backend = new Backend(3000);
-backend.start();
+Backend.createInstance(3000);
+Backend.getInstance().start();
 
 //TODO Action logger -> Log action to file
 //TODO Authentication -> Middleware

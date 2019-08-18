@@ -3,6 +3,7 @@ import Logger from "../Logger/Logger";
 import {LogType} from "../Logger/LogType";
 import {ActionLogger} from "../Logger/ActionLogger";
 import mongodb = require("mongoose");
+import Backend from "../Backend";
 
 export default class Mongo {
     static mongoose = mongodb;
@@ -16,7 +17,7 @@ export default class Mongo {
         this.mongoose.set('useCreateIndex', true);
         let db = this.mongoose.connection;
 
-        db.on('connected', () => {this.trying = false;Logger.logType(LogType.SUCCESS, "MongoDB connection has been established.")});
+        db.on('connected', () => {this.trying = false;Backend.getInstance().startListener();Logger.logType(LogType.SUCCESS, "MongoDB connection has been established.")});
     }
 
     private static tryConnect() {
