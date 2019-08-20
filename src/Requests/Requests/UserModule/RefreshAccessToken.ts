@@ -9,7 +9,7 @@ export class RefreshAccessToken extends ModuleMethod {
     request: string = "refreshToken";
     requestType: RequestType = RequestType.POST;
     requiredParameters: string[] = ["refresh_token"];
-    needsAuth: boolean = true;
+    needsAuth: boolean = false;
 
     handle(request: ModuleRequest) {
         User.refreshToken(request.parameters.refresh_token).then((newToken: any) => {

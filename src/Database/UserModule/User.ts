@@ -15,7 +15,9 @@ export interface IUser extends mongoose.Document {
     email: string,
     password: string,
     phone_number: string,
-    tokens: {access: string, refresh: string}[]
+    tokens: {access: string, refresh: string}[],
+    date_updated: Date,
+    date_created: Date
 }
 
 export interface IUserFunctions extends mongoose.Model<IUser> {
@@ -30,7 +32,14 @@ export const UserSchema = new Mongo.mongoose.Schema({
     email: {type: String, required: true, index: {unique: true}},
     password: {type: String, required: true},
     phone_number: {type: String, required: true},
-    tokens: [{access: {type: String, required: true}, refresh: {type: String, required: true}}]
+    tokens: [{access: {type: String, required: true}, refresh: {type: String, required: true}}],
+    date_updated: {type: Date, default: Date.now},
+    date_created: {type: Date, default: Date.now}
+});
+
+UserSchema.pre<IUser>('save', function(next) {
+    this.date_updated = new Date(Date.now());
+    next();
 });
 
 UserSchema.methods.generateTokens = async function() { //This isn"t an arrow function because this is needed in this context.
