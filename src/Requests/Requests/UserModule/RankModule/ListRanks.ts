@@ -4,6 +4,8 @@ import {ModuleMethod} from "../../../ModuleMethod";
 import {RequestType} from "../../../RequestType";
 import {ErrorType} from "../../../../Error/ErrorType";
 import {Error} from "../../../../Error/Error";
+import {Sort} from "../../../../Sort/Sort";
+import {SortType} from "../../../../Sort/SortType";
 
 export class ListRanks extends ModuleMethod {
 
@@ -18,10 +20,11 @@ export class ListRanks extends ModuleMethod {
             ranks.forEach((rank: IRank) => {
                 ranksToSend.push({
                     level: rank.level,
-                    name: rank.name
+                    name: rank.name,
+                    permissions: rank.permissions
                 });
             });
-            request.respond(ranksToSend);
+            request.respond(Sort.sortObject(ranksToSend, "level", SortType.NUMERIC));
         });
     }
 
