@@ -9,7 +9,7 @@ export class ListRanks extends ModuleMethod {
 
     request: string = "listRanks";
     requestType: RequestType = RequestType.GET;
-    needsAuth: boolean = true; //TODO To true!
+    needsAuth: boolean = true;
 
     async handle(request: ModuleRequest) {
         Rank.find({}, (error, ranks) => {

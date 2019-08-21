@@ -89,7 +89,7 @@ UserSchema.statics.refreshToken = async function(refreshToken: string): Promise<
             algorithm: "HS256"
         });
 
-        User.updateOne({"_id": decodedRefreshToken._id, "tokens.refresh": refreshToken}, {"$set": {"tokens.$.access": accessToken}}, (error: any) => {
+        User.updateOne({_id: decodedRefreshToken._id, "tokens.refresh": refreshToken}, {"$set": {"tokens.$.access": accessToken}}, (error: any) => {
             if(error) return reject(new Error(ErrorType.UNKNOWN, error));
         });
 

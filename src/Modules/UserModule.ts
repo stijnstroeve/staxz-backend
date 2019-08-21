@@ -5,6 +5,7 @@ import {LogInUser} from "../Requests/Requests/UserModule/LogInUser";
 import {RefreshAccessToken} from "../Requests/Requests/UserModule/RefreshAccessToken";
 import {Test} from "../Requests/Requests/UserModule/Test";
 import {ListRanks} from "../Requests/Requests/UserModule/RankModule/ListRanks";
+import {SetUserRank} from "../Requests/Requests/UserModule/RankModule/SetUserRank";
 
 export class UserModule extends Module {
     name: string = "UserModule";
@@ -18,6 +19,8 @@ export class UserModule extends Module {
 
         //RanksModule
         this.moduleMethods.push(new ListRanks());
+        this.moduleMethods.push(new SetUserRank());
+
     }
 
 }
