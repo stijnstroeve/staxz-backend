@@ -11,6 +11,7 @@ export class ErrorType {
     static readonly NOT_AUTHORIZED  = new ErrorType('NOT_AUTHORIZED', 9, "You are not authorized.");
     static readonly UNEXPECTED_PARAMETER  = new ErrorType('UNEXPECTED_PARAMETER', 13, "There was an unexpected parameter.");
     static readonly EXTERNAL_ERROR  = new ErrorType('EXTERNAL_ERROR', 14, "An error occurred from an external request.");
+    static readonly NO_PERMISSION  = new ErrorType('NO_PERMISSION', 15, "You don't have permission te execute this.");
 
     private constructor(public key: string, public code: number, public description: string) {}
 
