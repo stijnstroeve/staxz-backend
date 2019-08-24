@@ -1,8 +1,8 @@
-import {ModuleRequest} from "../../ModuleRequest";
-import {RequestType} from "../../RequestType";
-import {ModuleMethod} from "../../ModuleMethod";
-import {Error} from "../../../Error/Error";
-import User from "../../../Database/UserModule/User";
+import {ModuleRequest} from "../../../ModuleRequest";
+import {RequestType} from "../../../RequestType";
+import {ModuleMethod} from "../../../ModuleMethod";
+import {Error} from "../../../../Error/Error";
+import User from "../../../../Database/UserModule/User";
 
 export class RefreshAccessToken extends ModuleMethod {
 

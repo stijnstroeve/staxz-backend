@@ -1,10 +1,10 @@
-import {ModuleMethod} from "../../ModuleMethod";
-import {RequestType} from "../../RequestType";
-import {ModuleRequest} from "../../ModuleRequest";
-import {ErrorType} from "../../../Error/ErrorType";
-import {Error} from "../../../Error/Error";
-import User from "../../../Database/UserModule/User";
-import Rank, {IRank} from "../../../Database/UserModule/Rank";
+import {ModuleMethod} from "../../../ModuleMethod";
+import {RequestType} from "../../../RequestType";
+import {ModuleRequest} from "../../../ModuleRequest";
+import {ErrorType} from "../../../../Error/ErrorType";
+import {Error} from "../../../../Error/Error";
+import User from "../../../../Database/UserModule/User";
+import Rank, {IRank} from "../../../../Database/UserModule/Rank";
 
 export class RegisterNewUser extends ModuleMethod {
 
@@ -38,9 +38,6 @@ export class RegisterNewUser extends ModuleMethod {
             });
 
         });
-
-
-
 
     }
 

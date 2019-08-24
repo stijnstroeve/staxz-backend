@@ -1,9 +1,9 @@
-import {ModuleRequest} from "../../ModuleRequest";
-import {RequestType} from "../../RequestType";
-import {Error} from "../../../Error/Error";
-import {ModuleMethod} from "../../ModuleMethod";
-import {ErrorType} from "../../../Error/ErrorType";
-import User from "../../../Database/UserModule/User";
+import {ModuleRequest} from "../../../ModuleRequest";
+import {RequestType} from "../../../RequestType";
+import {Error} from "../../../../Error/Error";
+import {ModuleMethod} from "../../../ModuleMethod";
+import {ErrorType} from "../../../../Error/ErrorType";
+import User from "../../../../Database/UserModule/User";
 
 export class LogInUser extends ModuleMethod {
 
