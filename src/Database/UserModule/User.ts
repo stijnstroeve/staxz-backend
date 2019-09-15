@@ -7,7 +7,7 @@ import Logger from "../../Logger/Logger";
 import {LogType} from "../../Logger/LogType";
 import {ErrorType} from "../../Error/ErrorType";
 import {Error} from "../../Error/Error";
-import Rank, {IRank} from "./Rank";
+import {IPermissionLevel} from "./PermissionLevel";
 
 export interface IUser extends mongoose.Document {
     firstname: string,
@@ -17,7 +17,7 @@ export interface IUser extends mongoose.Document {
     password: string,
     phone_number: string,
     tokens: {access: string, refresh: string}[],
-    rank: IRank,
+    level: IPermissionLevel,
     date_updated: Date,
     date_created: Date
 }
@@ -35,7 +35,7 @@ export const UserSchema = new Mongo.mongoose.Schema({
     password: {type: String, required: true},
     phone_number: {type: String, required: true},
     tokens: [{access: {type: String, required: true}, refresh: {type: String, required: true}}],
-    rank: {type: mongoose.Schema.Types.ObjectId, ref: 'Rank', required: true},
+    level: {type: mongoose.Schema.Types.ObjectId, ref: 'PermissionLevel', required: true},
     date_updated: {type: Date, default: Date.now},
     date_created: {type: Date, default: Date.now}
 });
@@ -117,7 +117,7 @@ UserSchema.statics.findByToken = function(accessToken: string): Promise<any> {
         }
 
         User.findOne({"_id": decodedAccessToken._id, "tokens.access": accessToken})
-            .populate('rank')
+            .populate('permissionlevel')
             .exec((error: any, user: IUser) => {
                 if(error) return reject(new Error(ErrorType.UNKNOWN, error));
 

@@ -23,11 +23,11 @@ export class Test extends ModuleMethod {
         // });
 
         User.findOne({email: "stijnstroeve3@hotmail.com"})
-            .populate('rank')
+            .populate('permissionlevel')
             .exec(function (err, user: IUser) {
                 if (err) console.log(err);
                 request.respond(user);
-                console.log(user.rank.level);
+                console.log(user.level.level);
                 // prints "The author is Ian Fleming"
             });
 

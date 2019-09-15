@@ -4,7 +4,7 @@ import {ModuleRequest} from "../../../ModuleRequest";
 import {ErrorType} from "../../../../Error/ErrorType";
 import {Error} from "../../../../Error/Error";
 import User from "../../../../Database/UserModule/User";
-import Rank, {IRank} from "../../../../Database/UserModule/Rank";
+import PermissionLevel, {IPermissionLevel} from "../../../../Database/UserModule/PermissionLevel";
 
 export class RegisterNewUser extends ModuleMethod {
 
@@ -14,7 +14,7 @@ export class RegisterNewUser extends ModuleMethod {
     needsAuth: boolean = false;
 
     async handle(request: ModuleRequest) {
-        Rank.findOne({level: 0}, (error, rank: IRank) => {
+        PermissionLevel.findOne({level: 0}, (error, level: IPermissionLevel) => {
             if(error) {request.error(new Error(ErrorType.UNKNOWN, error)); return;}
 
             let user = new User({
@@ -25,7 +25,7 @@ export class RegisterNewUser extends ModuleMethod {
                 password: request.parameters.password,
                 phone_number: request.parameters.phone_number,
                 tokens: [],
-                rank: rank._id
+                level: level._id
             });
             user.save((error: any) => {
                 if(error) {

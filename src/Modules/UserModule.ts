@@ -4,8 +4,8 @@ import {ModuleMethod} from "../Requests/ModuleMethod";
 import {LogInUser} from "../Requests/Requests/UserModule/UserModule/LogInUser";
 import {RefreshAccessToken} from "../Requests/Requests/UserModule/UserModule/RefreshAccessToken";
 import {Test} from "../Requests/Requests/UserModule/Test";
-import {ListRanks} from "../Requests/Requests/UserModule/RankModule/ListRanks";
-import {SetUserRank} from "../Requests/Requests/UserModule/RankModule/SetUserRank";
+import {ListPermissionLevels} from "../Requests/Requests/UserModule/PermissionModule/ListPermissionLevels";
+import {SetUserPermissionLevel} from "../Requests/Requests/UserModule/PermissionModule/SetUserPermissionLevel";
 import {CreateNewUser} from "../Requests/Requests/UserModule/UserModule/CreateNewUser";
 
 export class UserModule extends Module {
@@ -19,9 +19,9 @@ export class UserModule extends Module {
         this.moduleMethods.push(new RefreshAccessToken());
         this.moduleMethods.push(new Test());
 
-        //RanksModule
-        this.moduleMethods.push(new ListRanks());
-        this.moduleMethods.push(new SetUserRank());
+        //PermissionModule
+        this.moduleMethods.push(new ListPermissionLevels());
+        this.moduleMethods.push(new SetUserPermissionLevel());
 
     }
 

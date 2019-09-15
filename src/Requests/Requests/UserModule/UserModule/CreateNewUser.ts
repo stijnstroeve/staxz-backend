@@ -3,7 +3,7 @@ import {RequestType} from "../../../RequestType";
 import {ModuleMethod} from "../../../ModuleMethod";
 import {Error} from "../../../../Error/Error";
 import User from "../../../../Database/UserModule/User";
-import Rank, {IRank} from "../../../../Database/UserModule/Rank";
+import PermissionLevel, {IPermissionLevel} from "../../../../Database/UserModule/PermissionLevel";
 import {ErrorType} from "../../../../Error/ErrorType";
 
 export class CreateNewUser extends ModuleMethod {
@@ -15,9 +15,7 @@ export class CreateNewUser extends ModuleMethod {
     needsAuth: boolean = true;
 
     handle(request: ModuleRequest) {
-        Rank.getLevel(request.parameters.level ? request.parameters.level : 0).then((rank) => {
-            console.log(request.parameters.level);
-            console.log(rank);
+        PermissionLevel.getLevel(request.parameters.level ? request.parameters.level : 0).then((level) => {
             let user = new User({
                 firstname: request.parameters.firstname,
                 lastname: request.parameters.lastname,
@@ -26,7 +24,7 @@ export class CreateNewUser extends ModuleMethod {
                 password: request.parameters.password,
                 phone_number: request.parameters.phone_number,
                 tokens: [],
-                rank: rank._id
+                level: level._id
             });
             user.save((error: any) => {
                 if(error) {

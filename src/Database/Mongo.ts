@@ -4,7 +4,7 @@ import {LogType} from "../Logger/LogType";
 import {ActionLogger} from "../Logger/ActionLogger";
 import mongodb = require("mongoose");
 import Backend from "../Backend";
-import Rank from "./UserModule/Rank";
+import PermissionLevel from "./UserModule/PermissionLevel";
 
 export default class Mongo {
     static mongoose = mongodb;
@@ -23,8 +23,8 @@ export default class Mongo {
             Logger.logType(LogType.SUCCESS, "MongoDB connection has been established.");
 
             this.mongoose.set('useFindAndModify', true);
-            const defaultRank = new Rank({level: 0, name: "leerling", permissions: []});
-            defaultRank.save().catch(() => {});
+            const defaultLevel = new PermissionLevel({level: 0, name: "leerling", permissions: []});
+            defaultLevel.save().catch(() => {});
         });
     }
 
