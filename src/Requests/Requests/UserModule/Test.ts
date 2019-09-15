@@ -23,7 +23,7 @@ export class Test extends ModuleMethod {
         // });
 
         User.findOne({email: "stijnstroeve3@hotmail.com"})
-            .populate('permissionlevel')
+            .populate('level')
             .exec(function (err, user: IUser) {
                 if (err) console.log(err);
                 request.respond(user);

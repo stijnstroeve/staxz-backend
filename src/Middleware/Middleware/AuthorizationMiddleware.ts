@@ -14,6 +14,7 @@ export class AuthorizationMiddleware extends Middleware {
                 let requestToken = req.token;
                 if(requestToken) {
                     User.findByToken(requestToken).then((user: any) => {
+                        console.log(user);
                         if(!user.level.permissions.includes(method.request) && !user.level.permissions.includes("*")) {
                             req.moduleRequest.error(new Error(ErrorType.NO_PERMISSION));
                             return;
@@ -21,6 +22,7 @@ export class AuthorizationMiddleware extends Middleware {
                         req.User = user;
                         next();
                     }).catch((error: any) => {
+                        console.log(error);
                         req.moduleRequest.error(error);
                     });
                 } else {

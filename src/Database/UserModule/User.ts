@@ -117,7 +117,7 @@ UserSchema.statics.findByToken = function(accessToken: string): Promise<any> {
         }
 
         User.findOne({"_id": decodedAccessToken._id, "tokens.access": accessToken})
-            .populate('permissionlevel')
+            .populate('level')
             .exec((error: any, user: IUser) => {
                 if(error) return reject(new Error(ErrorType.UNKNOWN, error));
 
