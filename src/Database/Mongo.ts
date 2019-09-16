@@ -19,7 +19,8 @@ export default class Mongo {
         let db = this.mongoose.connection;
 
         db.on('connected', () => {
-            this.trying = false;Backend.getInstance().startListener();
+            this.trying = false;
+            Backend.getInstance().startListener();
             Logger.logType(LogType.SUCCESS, "MongoDB connection has been established.");
 
             this.mongoose.set('useFindAndModify', true);
@@ -29,7 +30,7 @@ export default class Mongo {
     }
 
     private static tryConnect() {
-        this.mongoose.connect(config.DATABASE.MONGODB_CONNECTION_URI, {useNewUrlParser: true}, (error) => {
+        this.mongoose.connect(config.DATABASE.MONGODB_CONNECTION_URI, {useNewUrlParser: true, useUnifiedTopology: true}, (error) => {
             if(this.trying) {
                 ActionLogger.logAction("MONGO_CONNETION_ERROR", error);
 
