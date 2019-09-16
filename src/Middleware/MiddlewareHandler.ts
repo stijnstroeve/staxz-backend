@@ -13,8 +13,8 @@ export class MiddlewareHandler {
         let middlewareList = [
             new ModuleRequestMiddleware(),
             new LogMiddleware(),
-            new ParameterMiddleware(),
-            new AuthorizationMiddleware()
+            new AuthorizationMiddleware(),
+            new ParameterMiddleware()
         ];
 
         //Create a list of middleware to add to the request

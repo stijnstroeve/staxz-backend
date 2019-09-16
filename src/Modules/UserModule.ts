@@ -7,6 +7,7 @@ import {Test} from "../Requests/Requests/UserModule/Test";
 import {ListPermissionLevels} from "../Requests/Requests/UserModule/PermissionModule/ListPermissionLevels";
 import {SetUserPermissionLevel} from "../Requests/Requests/UserModule/PermissionModule/SetUserPermissionLevel";
 import {CreateNewUser} from "../Requests/Requests/UserModule/UserModule/CreateNewUser";
+import { SetUserAddress } from "../Requests/Requests/UserModule/InfoModule/SetUserAddress";
 
 export class UserModule extends Module {
     name: string = "UserModule";
@@ -23,6 +24,8 @@ export class UserModule extends Module {
         this.moduleMethods.push(new ListPermissionLevels());
         this.moduleMethods.push(new SetUserPermissionLevel());
 
+        //InfoModule
+        this.moduleMethods.push(new SetUserAddress());
     }
 
 }

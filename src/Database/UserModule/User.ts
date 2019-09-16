@@ -9,9 +9,11 @@ import {ErrorType} from "../../Error/ErrorType";
 import {Error} from "../../Error/Error";
 import {IPermissionLevel} from "./PermissionLevel";
 import {IUserInfo} from "./UserInfo.js";
+import { IAddressInfo } from "./AddressInfo.js";
 
 export interface IUser extends mongoose.Document {
     user_info: IUserInfo,
+    user_address: IAddressInfo,
     level: IPermissionLevel,
     tokens: {access: string, refresh: string}[],
     blocked: boolean,
@@ -29,6 +31,7 @@ export interface IUserFunctions extends mongoose.Model<IUser> {
 
 export const UserSchema = new Mongo.mongoose.Schema({
     user_info: {type: mongoose.Schema.Types.ObjectId, ref: 'UserInfo', required: true},
+    user_address: {type: mongoose.Schema.Types.ObjectId, ref: 'AddressInfo', required: false},
     level: {type: mongoose.Schema.Types.ObjectId, ref: 'PermissionLevel', required: true},
     tokens: [{access: {type: String, required: true}, refresh: {type: String, required: true}}],
     blocked: {type: Boolean, default: false},
