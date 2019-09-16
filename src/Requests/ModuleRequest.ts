@@ -18,21 +18,23 @@ export class ModuleRequest {
     }
 
     respond(data: any) {
-        ActionLogger.logRequest(this);
+        let response = new DefaultResponse(this, true, data).json();
+        ActionLogger.logRequest(this, response);
 
-        this._response.send(new DefaultResponse(this, true, data).json());
+        this._response.send();
     }
 
     error(error: Error, status?: number) {
         if(!(error instanceof Error)) {
             error = new Error(ErrorType.UNKNOWN, error);
         }
-        ActionLogger.logRequest(this);
+        let response = new DefaultResponse(this, false, null, error).json();
+        ActionLogger.logRequest(this, response);
 
         if(status) {
-            this._response.status(status).send(new DefaultResponse(this, false, null, error).json());
+            this._response.status(status).send(response);
         } else {
-            this._response.send(new DefaultResponse(this, false, null, error).json());
+            this._response.send(response);
         }
     }
 

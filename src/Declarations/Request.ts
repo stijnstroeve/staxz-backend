@@ -2,6 +2,7 @@
 declare namespace Express {
     export interface Request {
         User?: any,
-        moduleRequest?: any
+        moduleRequest?: any,
+        moduleName?: string
     }
 }

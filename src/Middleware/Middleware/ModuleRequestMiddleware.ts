@@ -10,6 +10,7 @@ export class ModuleRequestMiddleware extends Middleware {
         return (req: Request, res: Response, next: Function) => {
             let request: ModuleRequest = new ModuleRequest(req, res, method);
 
+            req.moduleName = module.name;
             req.moduleRequest = request;
             next();
         }

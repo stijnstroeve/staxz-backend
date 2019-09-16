@@ -28,8 +28,10 @@
     "compose-middleware": "^5.0.1",
     "express": "^4.17.1",
     "express-bearer-token": "^2.4.0",
+    "fs": "0.0.1-security",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.6.2"
+    "mongoose": "^5.6.2",
+    "path": "^0.12.7"
   },
   "devDependencies": {
     "@types/mongoose": "^5.5.6"

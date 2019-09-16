@@ -7,6 +7,7 @@ import Logger from "./Logger/Logger";
 import {ModuleHandler} from "./Modules/ModuleHandler";
 import {Router} from "./Routers/Router";
 import Mongo from "./Database/Mongo";
+import { ActionLogger } from "./Logger/ActionLogger.js";
 
 class Backend {
     static instance: Backend;
@@ -19,6 +20,9 @@ class Backend {
     }
 
     start() {
+        //Setup the action logger.
+        ActionLogger.setup();
+
         this.register();
 
         Mongo.connect();

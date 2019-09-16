@@ -6,6 +6,7 @@
     "MONGODB_CONNECTION_URI": "mongodb://127.0.0.1:27017/staxz",
     "RETRY_ROUNDS": 10
   },
+  "OUTPUT_PATH": "output", 
   "PASSWORD": {
     "SALT_ROUNDS": 10
   },
