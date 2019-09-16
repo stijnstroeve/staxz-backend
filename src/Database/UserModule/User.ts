@@ -7,14 +7,28 @@ import Logger from "../../Logger/Logger";
 import {LogType} from "../../Logger/LogType";
 import {ErrorType} from "../../Error/ErrorType";
 import {Error} from "../../Error/Error";
-import {IPermissionLevel} from "./PermissionLevel";
-import {IUserInfo} from "./UserInfo.js";
+import PermissionLevel, {IPermissionLevel} from "./PermissionLevel";
+import UserInfo, {IUserInfo} from "./UserInfo.js";
 import { IAddressInfo } from "./AddressInfo.js";
+import PointsInfo, { IPointsInfo } from "../PointsModule/PointsInfo.js";
+import PointChange, { IPointChange } from "../PointsModule/PointChange.js";
+
+export interface SimpleUser {
+    level: number,
+    firstname: string,
+    lastname: string,
+    username: string,
+    email: string,
+    password: string,
+    phone_number: string,
+    current_ip: string
+}
 
 export interface IUser extends mongoose.Document {
     user_info: IUserInfo,
     user_address: IAddressInfo,
     level: IPermissionLevel,
+    points_info: IPointsInfo,
     tokens: {access: string, refresh: string}[],
     blocked: boolean,
     ip_address_registered: string,
@@ -27,12 +41,14 @@ export interface IUser extends mongoose.Document {
 export interface IUserFunctions extends mongoose.Model<IUser> {
     findByToken(accessToken: string): Promise<any>;
     refreshToken(refreshToken: string): Promise<any>;
+    createUser(simpleUser: SimpleUser): Promise<any>;
 }
 
 export const UserSchema = new Mongo.mongoose.Schema({
     user_info: {type: mongoose.Schema.Types.ObjectId, ref: 'UserInfo', required: true},
     user_address: {type: mongoose.Schema.Types.ObjectId, ref: 'AddressInfo', required: false},
     level: {type: mongoose.Schema.Types.ObjectId, ref: 'PermissionLevel', required: true},
+    points_info: {type: mongoose.Schema.Types.ObjectId, ref: 'PointsInfo', required: true},
     tokens: [{access: {type: String, required: true}, refresh: {type: String, required: true}}],
     blocked: {type: Boolean, default: false},
     ip_address_registered: {type: String, default: "0.0.0.0"},
@@ -46,6 +62,39 @@ UserSchema.pre<IUser>('save', function(next) {
     this.date_updated = new Date(Date.now());
     next();
 });
+
+UserSchema.methods.changePoints = async function(changeAmount: number, add: boolean, byUser: IUser, ipAddress: string): Promise<any> { //This isn"t an arrow function because this is needed in this context.
+    return new Promise<any>((resolve, reject) => {
+        PointsInfo.findOne({_id: this.points_info}, (error: any, pointsInfo: IPointsInfo) => {
+            if(error) {reject(new Error(ErrorType.UNKNOWN, error)); return}
+            if(!pointsInfo) {reject(new Error(ErrorType.ERROR_FINDING_POINTS, error)); return} //TODO Not found? Create pointsinfo
+
+            let prefix = add ? "+" : "-";
+            let operation = prefix + changeAmount;
+
+            let pointChange = new PointChange({
+                changedBy: byUser._id,
+                changedTo: this._id,
+                operation: operation,
+                ip_address: ipAddress 
+            });
+
+            pointChange.save((error: any, pointChange: IPointChange) => {
+                if(error) {reject(new Error(ErrorType.UNKNOWN, error)); return}
+                if(!pointChange) {reject(new Error(ErrorType.UNKNOWN, error)); return}
+
+                let newChangeArray = pointsInfo.point_changes;
+                newChangeArray.push(pointChange._id);
+
+                PointsInfo.updateOne({_id: pointsInfo._id}, {point_changes: newChangeArray, points: add ? (pointsInfo.points + changeAmount) : (pointsInfo.points - changeAmount)}, (error: any) => {
+                    if(error) {reject(new Error(ErrorType.UNKNOWN, error)); return}
+    
+                    resolve();
+                });
+            })
+        });
+    });
+}
 
 UserSchema.methods.generateTokens = async function() { //This isn"t an arrow function because this is needed in this context.
     let accessToken: string = jwt.sign({_id: this._id.toString()}, pconfig.PRIVATE_ACCESS_TOKEN_KEY, {
@@ -67,6 +116,52 @@ UserSchema.methods.generateTokens = async function() { //This isn"t an arrow fun
         return null;
     }
 };
+
+UserSchema.statics.createUser = async function(simpleUser: SimpleUser): Promise<any> {
+    return new Promise<any>((resolve, reject) => {
+        PermissionLevel.getLevel(simpleUser.level ? simpleUser.level : 0).then((level) => {
+            let userInfo = new UserInfo({
+                firstname: simpleUser.firstname,
+                lastname: simpleUser.lastname,
+                username: simpleUser.username,
+                email: simpleUser.email,
+                password: simpleUser.password,
+                phone_number: simpleUser.phone_number
+            });
+            userInfo.save((error: any, info: IUserInfo) => {
+                if(error) {
+                    if(error.code === 11000 || error.code === 11001) {
+                        reject(new Error(ErrorType.USER_ALREADY_EXISTS, error)); return;
+                    }
+                    reject(new Error(ErrorType.UNKNOWN, error)); return;
+                }
+                let pointsInfo = new PointsInfo({
+                    points: 0,
+                    points_given: 0,
+                    point_changes: []
+                });
+                pointsInfo.save((error: any, pointsInfo: IPointsInfo) => {
+                    if(error) {reject(new Error(ErrorType.UNKNOWN, error)); return}
+                    let user = new User({
+                        user_info: info._id,
+                        level: level._id,
+                        points_info: pointsInfo._id,
+                        tokens: [],
+                        ip_address_registered: simpleUser.current_ip
+                    });
+                    user.save((error: any) => {
+                        if(error) {reject(new Error(ErrorType.UNKNOWN, error)); return}
+                        
+                        resolve();
+                    });
+                });
+            });
+        }).catch((error: Error) => {
+            reject(error);
+        });
+    });
+
+}
 
 UserSchema.statics.refreshToken = async function(refreshToken: string): Promise<any> {
     return new Promise<any>((resolve, reject) => {

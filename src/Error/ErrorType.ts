@@ -14,6 +14,7 @@ export class ErrorType {
     static readonly NO_PERMISSION  = new ErrorType('NO_PERMISSION', 15, "You don't have permission te execute this.");
     static readonly RANK_NOT_FOUND  = new ErrorType('RANK_NOT_FOUND', 16, "Rank with level [LEVEL] not found.");
     static readonly ERROR_SAVING_REWARD  = new ErrorType('ERROR_SAVING_REWARD', 17, "An error occurred while saving the reward.");
+    static readonly ERROR_FINDING_POINTS  = new ErrorType('ERROR_FINDING_POINTS', 18, "Something went wrong while finding your points.");
 
     private constructor(public key: string, public code: number, public description: string) {}
 

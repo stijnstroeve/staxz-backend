@@ -21,7 +21,7 @@ export class ModuleRequest {
         let response = new DefaultResponse(this, true, data).json();
         ActionLogger.logRequest(this, response);
 
-        this._response.send();
+        this._response.send(response);
     }
 
     error(error: Error, status?: number) {

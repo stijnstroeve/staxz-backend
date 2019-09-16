@@ -2,20 +2,24 @@ import {Module} from "./Module";
 import {UserModule} from "./UserModule";
 import {FallbackModule} from "./FallbackModule";
 import {RewardModule} from "./RewardModule";
+import { PointsModule } from "./PointsModule";
 
 export class ModuleHandler {
 
     static modules: Module[] = [];
 
     static registerModules() {
-        let userModule: Module = new UserModule();
-        let rewardModule: Module = new RewardModule();
+        let modules = [
+            new UserModule(),
+            new RewardModule(),
+            new PointsModule()
+        ];
 
-        userModule.registerModuleMethods();
-        rewardModule.registerModuleMethods();
+        modules.forEach((module) => {
+            module.registerModuleMethods();
 
-        this.modules.push(userModule);
-        this.modules.push(rewardModule);
+            this.modules.push(module);
+        });
     }
 
     static getModule(name: string): Module {

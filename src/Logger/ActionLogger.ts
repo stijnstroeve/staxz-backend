@@ -21,10 +21,11 @@ class LogRequest {
             body: request.request.body,
             query: request.request.query
         };
-        this.user = request.request.User ? request.request.User : undefined;
+        this.user = request.request.User ? Utils.fastClone(request.request.User) : undefined;
         if(this.user) {
             this.user.user_info = this.user.user_info._id ? this.user.user_info._id : this.user.user_info;
             this.user.level = this.user.level._id ? this.user.level._id : this.user.level;
+            this.user.tokens = undefined; //Remove tokens so it won't take up to much data
             if(this.user.address_info) this.user.address_info = this.user.address_info._id ? this.user.address_info._id : this.user.address_info;
         }
         this.ip = request.request.ip;
@@ -50,11 +51,12 @@ export class ActionLogger {
         });
     }
     static logRequest(request: ModuleRequest, response: any) {
-        response.data = undefined; //Remove data so not too much of the request gets logged.
+        let clone = Utils.fastClone(response);
+        clone.data = undefined; //Remove data so not too much of the request gets logged.
         let date = Utils.currentDate(); //TODO Dont calculate the current date every time the logger needs to log something.
         let fileName = "requests-" + date + ".txt";
 
-        let logRequest: LogRequest = new LogRequest(request, response);
+        let logRequest: LogRequest = new LogRequest(request, clone);
         fs.appendFile(path.join(config.OUTPUT_PATH, fileName), JSON.stringify(logRequest) + "\n", 'utf8', (error) => {
             if(error) {
                 Logger.logType(LogType.ERROR, "Error writing to " + fileName + "!"); 
