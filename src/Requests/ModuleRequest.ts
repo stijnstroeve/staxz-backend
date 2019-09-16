@@ -3,6 +3,7 @@ import {ModuleMethod} from "./ModuleMethod";
 import {DefaultResponse} from "./DefaultResponse";
 import {Error} from "../Error/Error";
 import {ActionLogger} from "../Logger/ActionLogger";
+import { ErrorType } from "../Error/ErrorType";
 
 export class ModuleRequest {
     private readonly _request: Request;
@@ -23,6 +24,9 @@ export class ModuleRequest {
     }
 
     error(error: Error, status?: number) {
+        if(!(error instanceof Error)) {
+            error = new Error(ErrorType.UNKNOWN, error);
+        }
         ActionLogger.logRequest(this);
 
         if(status) {

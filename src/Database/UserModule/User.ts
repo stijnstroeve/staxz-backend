@@ -8,16 +8,16 @@ import {LogType} from "../../Logger/LogType";
 import {ErrorType} from "../../Error/ErrorType";
 import {Error} from "../../Error/Error";
 import {IPermissionLevel} from "./PermissionLevel";
+import {IUserInfo} from "./UserInfo.js";
 
 export interface IUser extends mongoose.Document {
-    firstname: string,
-    lastname: string,
-    username: string,
-    email: string,
-    password: string,
-    phone_number: string,
-    tokens: {access: string, refresh: string}[],
+    user_info: IUserInfo,
     level: IPermissionLevel,
+    tokens: {access: string, refresh: string}[],
+    blocked: boolean,
+    ip_address_registered: string,
+    ip_address_last_login: string,
+    last_logged_in: Date,
     date_updated: Date,
     date_created: Date
 }
@@ -28,14 +28,13 @@ export interface IUserFunctions extends mongoose.Model<IUser> {
 }
 
 export const UserSchema = new Mongo.mongoose.Schema({
-    firstname: {type: String, required: true},
-    lastname: {type: String, required: true},
-    username: {type: String, required: true},
-    email: {type: String, required: true, index: {unique: true}},
-    password: {type: String, required: true},
-    phone_number: {type: String, required: true},
-    tokens: [{access: {type: String, required: true}, refresh: {type: String, required: true}}],
+    user_info: {type: mongoose.Schema.Types.ObjectId, ref: 'UserInfo', required: true},
     level: {type: mongoose.Schema.Types.ObjectId, ref: 'PermissionLevel', required: true},
+    tokens: [{access: {type: String, required: true}, refresh: {type: String, required: true}}],
+    blocked: {type: Boolean, default: false},
+    ip_address_registered: {type: String, default: "0.0.0.0"},
+    ip_address_last_login: {type: String, default: "0.0.0.0"},
+    last_logged_in: {type: Date, default: Date.now},
     date_updated: {type: Date, default: Date.now},
     date_created: {type: Date, default: Date.now}
 });
@@ -120,7 +119,9 @@ UserSchema.statics.findByToken = function(accessToken: string): Promise<any> {
             .populate('level')
             .exec((error: any, user: IUser) => {
                 if(error) return reject(new Error(ErrorType.UNKNOWN, error));
+                if(!user) return reject(new Error(ErrorType.NO_PERMISSION, error));
 
+                console.log(user);
                 resolve(user);
             });
     })
